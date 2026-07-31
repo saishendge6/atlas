@@ -1,0 +1,80 @@
+# =============================================================================
+# ATLAS - .gitignore
+# Covers: Java, Maven, IntelliJ IDEA, VS Code, Eclipse, macOS, Windows,
+#         build outputs, logs, environment files and runtime data.
+# =============================================================================
+
+# ------------------------- Build Outputs -------------------------
+target/
+build/
+out/
+dist/
+*.class
+*.jar
+*.war
+*.ear
+
+# ------------------------- Maven -------------------------
+# (target/ listed above; add lines here if a Maven wrapper is added later)
+
+# ------------------------- Java -------------------------
+*.hprof
+hs_err_pid*.log
+replay_pid*.log
+
+# ------------------------- IntelliJ IDEA -------------------------
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# ------------------------- VS Code -------------------------
+.vscode/
+*.code-workspace
+
+# ------------------------- Eclipse -------------------------
+.settings/
+.classpath
+.project
+bin/
+
+# ------------------------- macOS -------------------------
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# ------------------------- Windows -------------------------
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ------------------------- Logs -------------------------
+*.log
+logs/
+
+# ------------------------- Environment Files -------------------------
+.env
+.env.*
+!.env.example
+
+# ------------------------- Secrets -------------------------
+*.pem
+*.key
+*.p12
+*.keystore
+
+# ------------------------- Runtime Data (created by the app) -------------------------
+data/*
+!data/.gitkeep
+
+# ------------------------- Misc -------------------------
+*.tmp
+*.bak
+*~
+*.swp
