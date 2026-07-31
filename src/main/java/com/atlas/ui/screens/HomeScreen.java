@@ -1,12 +1,10 @@
 package com.atlas.ui.screens;
 
-import com.atlas.config.AppConfig;
+import com.atlas.core.ApplicationContext;
 import com.atlas.ui.InputReader;
 import com.atlas.ui.NavigationCommand;
 import com.atlas.ui.OutputWriter;
 import com.atlas.util.AppTheme;
-
-import java.util.Objects;
 
 /**
  * Root screen of the shell.
@@ -16,11 +14,11 @@ import java.util.Objects;
  */
 public final class HomeScreen extends AbstractScreen {
 
-    private final AppConfig config;
+    private final ApplicationContext context;
 
-    public HomeScreen(AppConfig config) {
+    public HomeScreen(ApplicationContext context) {
         super("Main Menu");
-        this.config = Objects.requireNonNull(config, "config must not be null");
+        this.context = context;
     }
 
     @Override
@@ -28,7 +26,7 @@ public final class HomeScreen extends AbstractScreen {
         output.println();
         output.println(AppTheme.separator());
         output.println(AppTheme.center("ATLAS"));
-        output.println(AppTheme.center(config.getTagline()));
+        output.println(AppTheme.center(context.getConfig().getTagline()));
         output.println(AppTheme.separator());
     }
 
@@ -70,14 +68,17 @@ public final class HomeScreen extends AbstractScreen {
      */
     private NavigationCommand route(String choice) {
         return switch (choice) {
-            case "1" -> NavigationCommand.navigate(new DashboardScreen());
-            case "2" -> NavigationCommand.navigate(new SubjectsScreen());
-            case "3" -> NavigationCommand.navigate(new AttendanceScreen());
-            case "4" -> NavigationCommand.navigate(new StudySessionsScreen());
-            case "5" -> NavigationCommand.navigate(new AssignmentsScreen());
-            case "6" -> NavigationCommand.navigate(new GoalsScreen());
-            case "7" -> NavigationCommand.navigate(new ExpensesScreen());
-            case "8" -> NavigationCommand.navigate(new SettingsScreen(config));
+            case "1" -> NavigationCommand.navigate(new DashboardScreen(context));
+            case "2" -> NavigationCommand.navigate(new SubjectsScreen(context.getSubjectService()));
+            case "3" -> NavigationCommand.navigate(
+                    new AttendanceScreen(context.getAttendanceService(), new SubjectSelector(context.getSubjectService())));
+            case "4" -> NavigationCommand.navigate(
+                    new StudySessionsScreen(context.getStudySessionService(), new SubjectSelector(context.getSubjectService())));
+            case "5" -> NavigationCommand.navigate(
+                    new AssignmentsScreen(context.getAssignmentService(), new SubjectSelector(context.getSubjectService())));
+            case "6" -> NavigationCommand.navigate(new GoalsScreen(context.getGoalService()));
+            case "7" -> NavigationCommand.navigate(new ExpensesScreen(context.getExpenseService()));
+            case "8" -> NavigationCommand.navigate(new SettingsScreen(context.getConfig()));
             case "9", "0" -> NavigationCommand.exit();
             default -> null;
         };

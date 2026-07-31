@@ -29,11 +29,12 @@ public final class AtlasApplication {
      * Starts the interactive CLI shell and blocks until the user exits.
      */
     public void run() {
+        ApplicationContext context = new ApplicationContext(config);
         InputReader input = new ConsoleInputReader();
         OutputWriter output = new ConsoleOutputWriter();
 
         NavigationController navigation = new NavigationController();
-        navigation.run(new HomeScreen(config), input, output);
+        navigation.run(new HomeScreen(context), input, output);
 
         output.println();
         output.println("Goodbye. Keep building yourself.");

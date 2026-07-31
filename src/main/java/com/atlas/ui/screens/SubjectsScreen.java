@@ -1,27 +1,67 @@
 package com.atlas.ui.screens;
 
+import com.atlas.model.Subject;
+import com.atlas.service.EntityService;
+import com.atlas.service.SubjectService;
 import com.atlas.ui.InputReader;
-import com.atlas.ui.NavigationCommand;
+import com.atlas.ui.InputPrompts;
 import com.atlas.ui.OutputWriter;
 
 /**
- * Subjects screen (placeholder).
- *
- * <p>Will manage subjects, their timetables and associated study material.
- * For now it only explains its purpose.</p>
+ * Manages subjects: create, list, update, delete.
  */
-public final class SubjectsScreen extends AbstractScreen {
+public final class SubjectsScreen extends EntityManagerScreen<Subject> {
 
-    public SubjectsScreen() {
+    private final SubjectService service;
+
+    public SubjectsScreen(SubjectService service) {
         super("Subjects");
+        this.service = service;
     }
 
     @Override
-    protected NavigationCommand renderBody(InputReader input, OutputWriter output) {
-        output.println();
-        output.println("Add, view and manage your subjects here.");
-        output.println("Timetables and study material will be linked per subject.");
-        output.println("(Placeholder - evolves in a later version.)");
-        return awaitBack(input, output);
+    protected EntityService<Subject> service() {
+        return service;
+    }
+
+    @Override
+    protected String entityName() {
+        return "subject";
+    }
+
+    @Override
+    protected Subject createDraft(InputReader input, OutputWriter output) {
+        String name = InputPrompts.readRequiredLine(input, output, "Name");
+        String code = InputPrompts.readOptionalLine(input, output, "Code (e.g. CS201)");
+        String notes = InputPrompts.readOptionalLine(input, output, "Notes");
+        if (name == null || code == null || notes == null) {
+            return null;
+        }
+        return Subject.draft(name, code, notes);
+    }
+
+    @Override
+    protected Subject updateDraft(Subject current, InputReader input, OutputWriter output) {
+        String name = InputPrompts.readRequiredLine(input, output, "Name");
+        String code = InputPrompts.readOptionalLine(input, output, "Code (e.g. CS201)");
+        String notes = InputPrompts.readOptionalLine(input, output, "Notes");
+        if (name == null || code == null || notes == null) {
+            return null;
+        }
+        String keptCode = code.isEmpty() ? current.code() : code;
+        String keptNotes = notes.isEmpty() ? current.notes() : notes;
+        return new Subject(current.getId(), name, keptCode, keptNotes, current.createdAt());
+    }
+
+    @Override
+    protected String describe(Subject subject) {
+        StringBuilder line = new StringBuilder(subject.name());
+        if (subject.code() != null && !subject.code().isBlank()) {
+            line.append(" (").append(subject.code()).append(")");
+        }
+        if (subject.notes() != null && !subject.notes().isBlank()) {
+            line.append(" - ").append(subject.notes());
+        }
+        return line.toString();
     }
 }

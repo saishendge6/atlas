@@ -22,24 +22,26 @@ that works on the web and on mobile, backed by a personal cloud.
 
 ## Features
 
-### Current (V1)
+### Current (V2)
 
 - Interactive CLI shell with a 9-item main menu (Dashboard, Subjects,
   Attendance, Study Sessions, Assignments, Goals, Expenses, Settings)
 - Stack-based navigation system — every screen can push/back/exit, and
   screens communicate only through immutable navigation commands
-- Clean layered architecture (UI / Service / Repository / Model) with
+- Full CRUD for all six modules, persisted as pretty-printed JSON files
+  in `data/` (Jackson)
+- Layered architecture (UI / Service / Repository / Model) with
   `System.in/out` isolated behind interfaces — no Scanner in business logic
+- Business validation in the service layer (required fields, positive
+  amounts, subject references) and cascade delete for subjects
+- Dashboard aggregating live counts across all modules
 - Configuration loaded from `application.properties` with sane defaults
-- Consistent presentation layer, graceful Ctrl+C / Ctrl+D shutdown
-- Unit tests and a Maven build (Java 21)
+- Unit tests and a Maven build (Java 21); fat jar with Shade for
+  `java -jar` distribution
 
 ### Planned
 
-- Domain models + JSON repositories (local persistence in `data/`)
-- Full CRUD for subjects, attendance, study sessions, assignments,
-  goals, and expenses
-- Dashboard aggregation and progress statistics
+- Study session timers and progress statistics
 - SQLite storage, then a Spring Boot REST API
 - React web app, mobile app, cloud sync and SaaS accounts
 
@@ -86,7 +88,7 @@ atlas/
 | Version | Focus |
 |---------|-------|
 | **V1**  | Foundation: CLI shell, navigation, layered architecture |
-| **V2**  | Domain model + JSON repositories + CRUD for all modules |
+| **V2**  | Domain model + JSON repositories + CRUD for all modules (current) |
 | **V3**  | SQLite persistence, statistics and reporting |
 | **V4**  | Spring Boot REST API |
 | **V5**  | React web application |
@@ -102,7 +104,7 @@ atlas/
 ### Install & Run
 
 ```bash
-git clone https://github.com/<your-username>/atlas.git
+git clone https://github.com/saishendge6/atlas.git
 cd atlas
 
 mvn clean package        # compile, test, package
